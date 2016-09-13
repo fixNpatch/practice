@@ -36,11 +36,11 @@ void heapsort(vector<string> &v, int h, int &cnt){
 
 int main(){
 	int n, d, h, cnt = 0;
-	char * s = new char[100];
+	string s;
 	scanf("%d", &n);
 	vector<string> a;
 	for(int i = 0; i < n; i++){
-		cin >> s;
+		getline(cin, s);
 		a.push_back(s);
 	}
 	h = a.size();
