@@ -1,0 +1,106 @@
+#include <vector>
+#include <cstdio>
+#include <ctime>
+#include <cassert>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+void heapify(vector<int> &v, int pos, int h){
+	int j;
+	while(2*pos + 1 < h){
+		j = 2*pos + 1;
+		if((j + 1 < h) && (v[j+1] > v[j])){
+			j++;
+		}
+		if(v[j] > v[pos]){
+			swap(v[j], v[pos]);
+			pos = j;
+		}
+		else break;
+	}
+}
+
+void heapsort(vector<int> &v, int h){
+	for (int i = h - 1; i >= 0; i--)
+        heapify(v, i, h);
+    while(h>1){
+		swap(v[h-1], v[0]);
+		h--;
+		heapify(v, 0, h);
+	}
+}
+
+void tripleHeapify(vector<int> &v, int pos, int h){
+	int j, k, vk;
+	while(3*pos+1 < h){
+		j = 3*pos + 1;
+		k = j;
+		vk = v[k];
+		if((j + 1 < h) && (v[j+1] > vk))
+			k = j + 1, vk = v[k];
+		if((j + 2 < h) && (v[j+2] > vk))
+			k = j + 2, vk = v[k];
+		j = k;
+		if(vk > v[pos]){
+			swap(v[j], v[pos]);
+			pos = j;
+		}
+		else break;
+	}
+}
+
+void tripleHeapsort(vector<int> &v, int h){
+	for (int i = h - 1; i >= 0; i--)
+        tripleHeapify(v, i, h);
+	
+    while(h>1){
+		swap(v[h-1], v[0]);
+		h--;
+		tripleHeapify(v, 0, h);
+	}
+}
+
+
+
+int main(){
+	const int B = 100000;
+
+	for(int len=B; len <= 10*B; len+=B){
+		vector<int> a (len);
+		
+		for(int i=0; i < len; i++)
+			a[i] = (rand() << 15) ^ rand();
+
+		vector<int> b0 (a);
+		vector<int> b1 (a);
+		vector<int> b2 (a);
+
+		int h0 = clock();
+		sort(b0.begin(), b0.end());
+		h0 = clock() - h0;
+
+		int h1 = clock();
+		heapsort(b1, len);
+		h1 = clock() - h1;
+
+		int h2 = clock();
+		tripleHeapsort(b2, len);
+		h2 = clock() - h2;
+
+		if (b0!=b1) {
+			cout << "ERROR b0 b1" << endl;
+			exit(1);
+		}
+		if (b1!=b2) {
+			cout << "ERROR b1 b2" << endl;
+			exit(1);
+		}
+
+		cout << len << " " << h0 << " " << h1 << " " << h2 << endl; 
+
+	}
+
+	return 0;
+}
+
