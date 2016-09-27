@@ -20,7 +20,6 @@ void heapify(vector<int> &v, int pos, int h){
 		else break;
 	}
 }
-
 void heapsort(vector<int> &v, int h){
 	for (int i = h - 1; i >= 0; i--)
         heapify(v, i, h);
@@ -30,7 +29,6 @@ void heapsort(vector<int> &v, int h){
 		heapify(v, 0, h);
 	}
 }
-
 void tripleHeapify(vector<int> &v, int pos, int h){
 	int j, k, vk;
 	while(3*pos+1 < h){
@@ -49,7 +47,6 @@ void tripleHeapify(vector<int> &v, int pos, int h){
 		else break;
 	}
 }
-
 void tripleHeapsort(vector<int> &v, int h){
 	for (int i = h - 1; i >= 0; i--)
         tripleHeapify(v, i, h);
@@ -60,12 +57,39 @@ void tripleHeapsort(vector<int> &v, int h){
 		tripleHeapify(v, 0, h);
 	}
 }
-
-
+void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
+	int pos1 = l;
+	int pos2 = m + 1;
+	int posBuff = l;
+	while(pos1 <= m && pos2 <= r){
+		if(v[pos1]<v[pos2]) tmp[posBuff++] = v[pos1++];
+		else tmp[posBuff++] = v[pos2++];
+	}
+	while(pos2 <= r)
+		tmp[posBuff++] = v[pos2++];
+	while(pos1 <= m)
+		tmp[posBuff++] = v[pos1++];
+	for (int i = 0; i < r - l + 1; i++)
+		v[l+i] = tmp[l+i];
+}
+void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
+	if(l < r){
+		int m = (l + r) / 2;
+		mergeSort(v, l, m, tmp);
+		mergeSort(v, m + 1, r, tmp);
+		mergeFunc(v, l, m, r, tmp);
+	}
+}
+void mergeSort(vector<int> &v){
+	if(!v.empty()){
+		vector<int> tmp(v.size());
+		mergeSort(v, 0, v.size() - 1, tmp);
+	}
+}
 
 int main(){
 	const int B = 100000;
-
+	cout << "numbers\tsort\thSort\t3xhSort\tmSort" << endl; 
 	for(int len=B; len <= 10*B; len+=B){
 		vector<int> a (len);
 		
@@ -75,6 +99,7 @@ int main(){
 		vector<int> b0 (a);
 		vector<int> b1 (a);
 		vector<int> b2 (a);
+		vector<int> b3 (a);
 
 		int h0 = clock();
 		sort(b0.begin(), b0.end());
@@ -88,6 +113,10 @@ int main(){
 		tripleHeapsort(b2, len);
 		h2 = clock() - h2;
 
+		int h3 = clock();
+		mergeSort(b3);
+		h3 = clock() - h3;
+
 		if (b0!=b1) {
 			cout << "ERROR b0 b1" << endl;
 			exit(1);
@@ -96,11 +125,14 @@ int main(){
 			cout << "ERROR b1 b2" << endl;
 			exit(1);
 		}
-
-		cout << len << " " << h0 << " " << h1 << " " << h2 << endl; 
+		if (b2!=b3) {
+			cout << "ERROR b2 b3" << endl;
+			exit(1);
+		}
+		
+		cout << len << " \t" << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << endl; 
 
 	}
 
 	return 0;
 }
-
