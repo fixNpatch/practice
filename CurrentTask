@@ -1,172 +1,41 @@
 #include <vector>
-#include <cstdio>
-#include <ctime>
-#include <cassert>
-#include <algorithm>
 #include <iostream>
+
 using namespace std;
 
-void heapify(vector<int> &v, int pos, int h){
-	int j;
-	while(2*pos + 1 < h){
-		j = 2*pos + 1;
-		if((j + 1 < h) && (v[j+1] > v[j])){
-			j++;
-		}
-		if(v[j] > v[pos]){
-			swap(v[j], v[pos]);
-			pos = j;
-		}
-		else break;
+int partition(vector<int> v, int l, int r){
+	int pvt = v[(l+r)/2];
+	int i = l, j = r;
+	while(i <= j){
+		while(v[i] < pvt) i++;
+		while(v[j] > pvt) j--;
+		if(i <= j) swap(v[i++],v[j--]);
 	}
+	return j;
 }
-
-void heapsort(vector<int> &v, int h){
-	for (int i = h - 1; i >= 0; i--)
-        heapify(v, i, h);
-    while(h>1){
-		swap(v[h-1], v[0]);
-		h--;
-		heapify(v, 0, h);
-	}
-}
-
-void tripleHeapify(vector<int> &v, int pos, int h){
-	int j, k, vk;
-	while(3*pos+1 < h){
-		j = 3*pos + 1;
-		k = j;
-		vk = v[k];
-		if((j + 1 < h) && (v[j+1] > vk))
-			k = j + 1, vk = v[k];
-		if((j + 2 < h) && (v[j+2] > vk))
-			k = j + 2, vk = v[k];
-		j = k;
-		if(vk > v[pos]){
-			swap(v[j], v[pos]);
-			pos = j;
-		}
-		else break;
-	}
-}
-
-void tripleHeapsort(vector<int> &v, int h){
-	for (int i = h - 1; i >= 0; i--)
-        tripleHeapify(v, i, h);
-	
-    while(h>1){
-		swap(v[h-1], v[0]);
-		h--;
-		tripleHeapify(v, 0, h);
-	}
-}
-
-void mergeFunction(vector<int> &v, int l, int m, int r, vector<int> &tmp){
-	int pos1 = l;
-	int pos2 = m + 1;
-	int posBuff = l; // позиция 
-
-	//int * tmp = new int[r - l + 1];
-
-	//сливаем в буфер
-	while(pos1 <= m && pos2 <= r){
-		if(v[pos1]<v[pos2]){
-			//tmp[posBuff++] = v[pos1++];
-			tmp.push_back(v[pos1++]);
-			posBuff++;
-		}
-		else{
-			//tmp[posBuff++] = v[pos2++];
-			tmp.push_back(v[pos2++]);
-			posBuff++;
-		}
-	}
-
-	while(pos2 <= r)
-		tmp[posBuff++] = v[pos2++];
-	while(pos1 <= m)
-		tmp[posBuff++] = v[pos1++];
-	
-	//передаем из буфера
-	for (int i = 0; i < r - l + 1; i++)
-		v[l+i] = tmp[l+i];
-	
-	//очищаем буфер
-	//delete tmp;
-}
-
-void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
+void qksort(vector<int> v, int l, int r){
 	if(l < r){
-		int m = (l + r) / 2;
-		mergeSort(v, l, m, tmp);
-		mergeSort(v, m + 1, r, tmp);
-		mergeFunction(v, l, m, r, tmp);
+		int x = partition(v, l, r);
+		qksort(v, l, x);
+		qksort(v, x + 1, r);
 	}
 }
-
-void mergeSort(vector<int> &v){
-	if(!v.empty()){
-		vector<int> tmp(v.size());
-		mergeSort(v, 0, v.size() - 1, tmp);
-	}
-}
-
 
 
 int main(){
-	const int B = 100000;
-	
-	for(int len=B; len <= 10*B; len+=B){
-		vector<int> a (len);
-		
-		for(int i=0; i < len; i++)
-			a[i] = (rand() << 15) ^ rand();
+	const int B = 10;
+	vector<int> v (B);
+	for(int i = 0; i < B; i++)
+		v[i] = rand();
+	for(int i = 0; i < B; i++)
+		cout << v[i] << endl;
 
-		vector<int> b0 (a);
-		vector<int> b1 (a);
-		vector<int> b2 (a);
-		vector<int> b3 (a);
+	qksort(v, 0, v.size()-1);
 
-		int h0 = clock();
-		sort(b0.begin(), b0.end());
-		h0 = clock() - h0;
+	cout << "\nSorted\n";
+	for(int i = 0; i < B; i++)
+		cout << v[i] << endl;
 
-		int h1 = clock();
-		heapsort(b1, len);
-		h1 = clock() - h1;
-
-		int h2 = clock();
-		tripleHeapsort(b2, len);
-		h2 = clock() - h2;
-
-		int h3 = clock();
-		mergeSort(b3);
-		h3 = clock() - h3;
-
-		if (b0!=b1) {
-			cout << "ERROR b0 b1" << endl;
-			exit(1);
-		}
-		if (b1!=b2) {
-			cout << "ERROR b1 b2" << endl;
-			exit(1);
-		}
-		if (b2!=b3) {
-			cout << "ERROR b2 b3" << endl;
-			exit(1);
-		}
-
-		cout << len << " Sort: " << h0 << " HpSrt: " << h1 << " HpSrt3: " << h2 << " MrgSrt: " << h3 << endl; 
-
-	}
-
-	/*
-	vector<int> test;
-	for(int i = 0 ; i < 20; i++)
-		test[i] = rand();
-	mergeSort(test, 0, test.size()-1);
-	for(int i = 0; i < test.size(); i++)
-		cout << test[i];
-	*/
+	system("pause");
 	return 0;
 }
