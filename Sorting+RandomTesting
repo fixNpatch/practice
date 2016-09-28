@@ -97,24 +97,12 @@ void mergeTripeFunc(vector<int> &v, int l, int r, vector<int> &tmp){
 
 	while (k < r - l + 1){
 		if ((pos1 <= (r + 2 * l) / 3) && ((pos2 > (2 * r + l) / 3) || (v[pos1] <= v[pos2]))){
-			if ((pos3 <= r) && (v[pos3] <= v[pos1])){
-				j = pos3;
-				pos3++;
-			}
-			else{
-				j = pos1;
-				pos1++;
-			}
+			if ((pos3 <= r) && (v[pos3] <= v[pos1])) j = pos3++;
+			else j = pos1++;
 		}
 		else{
-			if ((pos3 <= r) && ((pos2 > (2 * r + l) / 3) || (v[pos3] <= v[pos2]))){
-				j = pos3;
-				pos3++;
-			}
-			else{
-				j = pos2;
-				pos2++;
-			}
+			if ((pos3 <= r) && ((pos2 > (2 * r + l) / 3) || (v[pos3] <= v[pos2]))) j = pos3++;
+			else j = pos2++;
 		}
 		tmp[k++] = v[j];
 	}
