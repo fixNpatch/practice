@@ -88,27 +88,47 @@ void mergeSort(vector<int> &v){
 }
 
 //unedit
-void mergeTripeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
+void mergeTripeFunc(vector<int> &v, int l, int r, vector<int> &tmp){
 	int pos1 = l;
-	int pos2 = m + 1;
-	int posBuff = l;
-	while(pos1 <= m && pos2 <= r){
-		if(v[pos1]<v[pos2]) tmp[posBuff++] = v[pos1++];
-		else tmp[posBuff++] = v[pos2++];
+	int pos2 = (r + 2 * l) / 3 + 1;
+	int pos3 = (2 * r + l) / 3 + 1;
+	int k = 0;
+	int j = 0;
+
+	while (k < r - l + 1){
+		if ((pos1 <= (r + 2 * l) / 3) && ((pos2 > (2 * r + l) / 3) || (v[pos1] <= v[pos2]))){
+			if ((pos3 <= r) && (v[pos3] <= v[pos1])){
+				j = pos3;
+				pos3++;
+			}
+			else{
+				j = pos1;
+				pos1++;
+			}
+		}
+		else{
+			if ((pos3 <= r) && ((pos2 > (2 * r + l) / 3) || (v[pos3] <= v[pos2]))){
+				j = pos3;
+				pos3++;
+			}
+			else{
+				j = pos2;
+				pos2++;
+			}
+		}
+		tmp[k++] = v[j];
 	}
-	while(pos2 <= r)
-		tmp[posBuff++] = v[pos2++];
-	while(pos1 <= m)
-		tmp[posBuff++] = v[pos1++];
-	for (int i = 0; i < r - l + 1; i++)
-		v[l+i] = tmp[l+i];
+
+	for (int i = 0; i < k; i++)
+		v[i + l] = tmp[i];
 }
+
 void mergeTripleSort(vector<int> &v, int l, int r, vector<int> &tmp){
 	if(l < r){
-		int m = (l + r) / 2;
-		mergeTripleSort(v, l, m, tmp);
-		mergeTripleSort(v, m + 1, r, tmp);
-		mergeTripeFunc(v, l, m, r, tmp);
+		mergeTripleSort(v, l, (r + 2 * l) / 3, tmp);
+		mergeTripleSort(v, (r + 2 * l) / 3 + 1, (2 * r + l) / 3, tmp);
+		mergeTripleSort(v, (2 * r + l) / 3 + 1, r, tmp);
+		mergeTripeFunc(v, l, r, tmp);
 	}
 }
 void mergeTripleSort(vector<int> &v){
@@ -175,6 +195,5 @@ int main(){
 		cout << len << "\t" << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << "\t" << h4 << endl; 
 
 	}
-	
 	return 0;
 }
