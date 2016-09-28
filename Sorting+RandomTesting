@@ -120,7 +120,7 @@ void mergeTripleSort(vector<int> &v){
 
 int main(){
 	const int B = 100000;
-	cout << "numbers\tsort\thSort\t3xhSort\tmSort" << endl; 
+	cout << "numbers\tsort\thSort\t3xhSort\tmSort\t3xmSort" << endl; 
 	for(int len=B; len <= 10*B; len+=B){
 		vector<int> a (len);
 		
@@ -131,6 +131,7 @@ int main(){
 		vector<int> b1 (a);
 		vector<int> b2 (a);
 		vector<int> b3 (a);
+		vector<int> b4 (a);
 
 		int h0 = clock();
 		sort(b0.begin(), b0.end());
@@ -148,6 +149,11 @@ int main(){
 		mergeSort(b3);
 		h3 = clock() - h3;
 
+		int h4 = clock();
+		mergeTripleSort(b4);
+		h4 = clock() - h4;
+
+
 		if (b0!=b1) {
 			cout << "ERROR b0 b1" << endl;
 			exit(1);
@@ -160,10 +166,15 @@ int main(){
 			cout << "ERROR b2 b3" << endl;
 			exit(1);
 		}
+
+		if (b3!=b4) {
+			cout << "ERROR b2 b3" << endl;
+			exit(1);
+		}
 		
-		cout << len << " \t" << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << endl; 
+		cout << len << "\t" << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << "\t" << h4 << endl; 
 
 	}
-
+	
 	return 0;
 }
