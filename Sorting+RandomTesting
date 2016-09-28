@@ -87,6 +87,37 @@ void mergeSort(vector<int> &v){
 	}
 }
 
+//unedit
+void mergeTripeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
+	int pos1 = l;
+	int pos2 = m + 1;
+	int posBuff = l;
+	while(pos1 <= m && pos2 <= r){
+		if(v[pos1]<v[pos2]) tmp[posBuff++] = v[pos1++];
+		else tmp[posBuff++] = v[pos2++];
+	}
+	while(pos2 <= r)
+		tmp[posBuff++] = v[pos2++];
+	while(pos1 <= m)
+		tmp[posBuff++] = v[pos1++];
+	for (int i = 0; i < r - l + 1; i++)
+		v[l+i] = tmp[l+i];
+}
+void mergeTripleSort(vector<int> &v, int l, int r, vector<int> &tmp){
+	if(l < r){
+		int m = (l + r) / 2;
+		mergeTripleSort(v, l, m, tmp);
+		mergeTripleSort(v, m + 1, r, tmp);
+		mergeTripeFunc(v, l, m, r, tmp);
+	}
+}
+void mergeTripleSort(vector<int> &v){
+	if(!v.empty()){
+		vector<int> tmp(v.size());
+		mergeTripleSort(v, 0, v.size() - 1, tmp);
+	}
+}
+
 int main(){
 	const int B = 100000;
 	cout << "numbers\tsort\thSort\t3xhSort\tmSort" << endl; 
