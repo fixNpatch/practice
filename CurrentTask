@@ -4,7 +4,8 @@
 using namespace std;
 
 int partition(vector<int> v, int l, int r){
-	int pvt = v[(l+r)/2];
+	// int pvt = v[(l+r)/2]; overflow
+	int pvt = v[l+(r-l)/2];
 	int i = l, j = r;
 	while(i <= j){
 		while(v[i] < pvt) i++;
