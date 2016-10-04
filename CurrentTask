@@ -1,9 +1,9 @@
 #include <vector>
 #include <iostream>
-
+#include <utility>
 using namespace std;
 
-int partition(vector<int> v, int l, int r){
+pair<int, int> partition(vector<int> v, int l, int r){
 	// int pvt = v[(l+r)/2]; overflow
 	int pvt = v[l+(r-l)/2];
 	int i = l, j = r;
@@ -12,13 +12,16 @@ int partition(vector<int> v, int l, int r){
 		while(v[j] > pvt) j--;
 		if(i <= j) swap(v[i++],v[j--]);
 	}
-	return j;
+	pair<int, int> ij;
+	ij.first = i, ij.second = j;
+	return ij;
 }
 void qksort(vector<int> v, int l, int r){
 	if(l < r){
-		int x = partition(v, l, r);
-		qksort(v, l, x);
-		qksort(v, x + 1, r);
+		pair<int, int> ij = partition(v, l, r);
+		int i = ij.first, j = ij.second;
+		if(j>l) qksort(v, l, j);
+		if(i<r) qksort(v, i, r);
 	}
 }
 
