@@ -3,7 +3,7 @@
 #include <utility>
 using namespace std;
 
-pair<int, int> partition(vector<int> v, int l, int r){
+pair<int, int> partition(vector<int> &v, int l, int r){
 	// int pvt = v[(l+r)/2]; overflow
 	int pvt = v[l+(r-l)/2];
 	int i = l, j = r;
@@ -16,7 +16,7 @@ pair<int, int> partition(vector<int> v, int l, int r){
 	ij.first = i, ij.second = j;
 	return ij;
 }
-void qksort(vector<int> v, int l, int r){
+void qksort(vector<int> &v, int l, int r){
 	if(l < r){
 		pair<int, int> ij = partition(v, l, r);
 		int i = ij.first, j = ij.second;
