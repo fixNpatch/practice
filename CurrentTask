@@ -1,7 +1,6 @@
-#include <cstdio>
 #include <iostream>
 #include <vector>
-#include <utility>
+
 using namespace std;
 
 pair<int, int> partition(vector<int> &v, int l, int r){
@@ -17,12 +16,13 @@ pair<int, int> partition(vector<int> &v, int l, int r){
 	ij.first = i, ij.second = j;
 	return ij;
 }
-void qksort(vector<int> &v, int l, int r){
+int kth(vector<int> &v, int l, int r, int k){
 	if(l < r){
 		pair<int, int> ij = partition(v, l, r);
 		int i = ij.first, j = ij.second;
-		if(j>l) qksort(v, l, j);
-		if(i<r) qksort(v, i, r);
+		if(k<=i) return kth(v, l, j, k);
+		if(k>=j) return kth(v, i, r, k);
+		return v[k];
 	}
 }
 
@@ -37,10 +37,9 @@ int main(){
 	if(n>2){
 		cin >> A >> B >> C >> D;
 		for(int i = 2; i < n; i++){
-			a[i] = (A * a[i-2] + B * a[i-1] + C)/D;
+			a[i] = (A * a[i-2] + B * a[i-1] + C)%D;
 		}
 	}
-	qksort(a, 0, a.size() - 1);
-	cout << a[k];
+	cout << kth(a, 0, a.size() - 1, k);
 	return 0;
 }
