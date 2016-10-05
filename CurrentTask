@@ -1,5 +1,6 @@
-#include <vector>
+#include <cstdio>
 #include <iostream>
+#include <vector>
 #include <utility>
 using namespace std;
 
@@ -27,19 +28,19 @@ void qksort(vector<int> &v, int l, int r){
 
 
 int main(){
-	const int B = 10;
-	vector<int> v (B);
-	for(int i = 0; i < B; i++)
-		v[i] = rand();
-	for(int i = 0; i < B; i++)
-		cout << v[i] << endl;
-
-	qksort(v, 0, v.size()-1);
-
-	cout << "\nSorted\n";
-	for(int i = 0; i < B; i++)
-		cout << v[i] << endl;
-
-	system("pause");
+	int n, k;
+	int A, B, C, D;
+	cin >> n >> k;
+	vector<int> a(n);
+	cin >> a[0] >> a[1];
+	
+	if(n>2){
+		cin >> A >> B >> C >> D;
+		for(int i = 2; i < n; i++){
+			a[i] = (A * a[i-2] + B * a[i-1] + C)/D;
+		}
+	}
+	qksort(a, 0, a.size() - 1);
+	cout << a[k];
 	return 0;
 }
