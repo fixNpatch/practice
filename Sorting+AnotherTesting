@@ -86,8 +86,7 @@ void mergeSort(vector<int> &v){
 		mergeSort(v, 0, v.size() - 1, tmp);
 	}
 }
-
-void mergeTripleFunc(vector<int> &v, int l, int r, vector<int> &tmp){
+void mergeTripeFunc(vector<int> &v, int l, int r, vector<int> &tmp){
 	int pos1 = l;
 	int pos2 = (r + 2 * l) / 3 + 1;
 	int pos3 = (2 * r + l) / 3 + 1;
@@ -105,16 +104,16 @@ void mergeTripleFunc(vector<int> &v, int l, int r, vector<int> &tmp){
 		}
 		tmp[k++] = v[j];
 	}
+
 	for (int i = 0; i < k; i++)
 		v[i + l] = tmp[i];
 }
-
 void mergeTripleSort(vector<int> &v, int l, int r, vector<int> &tmp){
 	if(l < r){
 		mergeTripleSort(v, l, (r + 2 * l) / 3, tmp);
 		mergeTripleSort(v, (r + 2 * l) / 3 + 1, (2 * r + l) / 3, tmp);
 		mergeTripleSort(v, (2 * r + l) / 3 + 1, r, tmp);
-		mergeTripleFunc(v, l, r, tmp);
+		mergeTripeFunc(v, l, r, tmp);
 	}
 }
 void mergeTripleSort(vector<int> &v){
@@ -123,15 +122,42 @@ void mergeTripleSort(vector<int> &v){
 		mergeTripleSort(v, 0, v.size() - 1, tmp);
 	}
 }
+pair<int, int> partition(vector<int> &v, int l, int r){
+	// int pvt = v[(l+r)/2]; overflow
+	int pvt = v[l+(r-l)/2];
+	int i = l, j = r;
+	while(i <= j){
+		while(v[i] < pvt) i++;
+		while(v[j] > pvt) j--;
+		if(i <= j) swap(v[i++],v[j--]);
+	}
+	pair<int, int> ij;
+	ij.first = i, ij.second = j;
+	return ij;
+}
+void qksort(vector<int> &v, int l, int r){
+	if(l < r){
+		pair<int, int> ij = partition(v, l, r);
+		int i = ij.first, j = ij.second;
+		if(j>l) qksort(v, l, j);
+		if(i<r) qksort(v, i, r);
+	}
+}
+
 
 int main(){
-	bool brk = false;
-	cout << "numbers\t sort\thSort\t3xhSort\tmSort\t3xmSort" << endl; 
-	for(int len, j = 0, ten = 1; j < 10; j++){
-		len = j * ten;
+	int A = 1;
+	const int B = 100000;
+	cout << "numbers\tsort\thSort\t3xhSort\tmSort\t3xmSort\tqkSort" << endl; 
+	//for(int len = 0; len <= 10 * B; len+=B){
+	for(int len = 0; len <= 10 * A; len+=A){
+		if(len == 10){
+			A = 1000000;
+			len = A;
+		}
 		vector<int> a (len);
 		
-		for(int i = 0; i < len; i++)
+		for(int i=0; i < len; i++)
 			a[i] = (rand() << 15) ^ rand();
 
 		vector<int> b0 (a);
@@ -139,6 +165,7 @@ int main(){
 		vector<int> b2 (a);
 		vector<int> b3 (a);
 		vector<int> b4 (a);
+		vector<int> b5 (a);
 
 		int h0 = clock();
 		sort(b0.begin(), b0.end());
@@ -160,6 +187,10 @@ int main(){
 		mergeTripleSort(b4);
 		h4 = clock() - h4;
 
+		int h5 = clock();
+		qksort(b5, 0, b5.size() - 1);
+		h5 = clock() - h5;
+
 
 		if (b0!=b1) {
 			cout << "ERROR b0 b1" << endl;
@@ -175,20 +206,16 @@ int main(){
 		}
 
 		if (b3!=b4) {
-			cout << "ERROR b2 b3" << endl;
+			cout << "ERROR b3 b4" << endl;
 			exit(1);
 		}
 
-		cout << len << "\t " << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << "\t" << h4 << endl; 
-
-		if(brk) break;
-		if(j == 9){
-			if(ten == 1){
-				j = 0;
-				ten = 1000000;
-			}
-			else if (ten == 1000000) brk = true;
+		if (b4!=b5) {
+			cout << "ERROR b4 b5" << endl;
+			exit(1);
 		}
+		
+		cout << len << "\t" << h0 << " \t" << h1 << " \t" << h2 << " \t" << h3 << "\t" << h4 << "\t" << h5 << endl; 
 
 	}
 	system("pause");
