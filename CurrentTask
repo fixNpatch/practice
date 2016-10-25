@@ -1,34 +1,58 @@
-#include <iostream>
 #include <vector>
+#include <cstdio>
+#include <ctime>
+#include <cassert>
 #include <algorithm>
-
+#include <iostream>
 using namespace std;
+
+
+void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
+	int pos1 = l;
+	int pos2 = m + 1;
+	int posBuff = l;
+	cout << "merging segments [" << pos1 << ", " << m << "] and [" << pos2 << ", " << r << "]" << endl;
+	while(pos1 <= m && pos2 <= r){
+		cout << "comparing " << v[pos1] << " and " << v[pos2] << endl;
+		if(v[pos1]<v[pos2]) tmp[posBuff++] = v[pos1++];
+		else tmp[posBuff++] = v[pos2++];
+	}
+	while(pos2 <= r)
+		tmp[posBuff++] = v[pos2++];
+	while(pos1 <= m)
+		tmp[posBuff++] = v[pos1++];
+	for (int i = 0; i < r - l + 1; i++)
+		v[l+i] = tmp[l+i];
+	cout << "segments [" << pos1 << ", " << m << "] and [" << pos2 << ", " << r << "] merged" << endl;
+}
+void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
+	if(l < r){
+		int m = (l + r) / 2;
+		mergeSort(v, l, m, tmp);
+		cout << "segments [" << l << ", " << m << "] sorted" << endl;
+		mergeSort(v, m + 1, r, tmp);
+		cout << "segments [" << m + 1 << ", " << r << "] sorted" << endl;
+		mergeFunc(v, l, m, r, tmp);
+	}
+}
+void mergeSort(vector<int> &v){
+	if(!v.empty()){
+		vector<int> tmp(v.size());
+		mergeSort(v, 0, v.size() - 1, tmp);
+	}
+}
 
 int main(){
 	int n;
 	cin >> n;
-	vector<pair<int, char>> a(n * 2);
-	vector<int> ans (n);
+	vector<int> a(n);
 	for(int i = 0; i < n; i++)
-		ans[i] = 0;
-	for(int i = 0; i < n * 2; i++){
-			cin >> a[i].first;
-			(i%2 == 0) ? a[i].second = 'b' : a[i].second = 'e';  
-	}
-	sort(a.begin(), a.end());
-	int lvl = 1;
-	for(int i = 0; i < n * 2; i++){
-		if(a[i].second == 'b') {
-			if((a[i-1].second == 'e')&&(a[i].first == a[i-1].first))
-				ans[++lvl]--;
-			else lvl++;
-		}
-		else{
-				ans[lvl--] += a[i].first - a[i-1].first + 1;
-		}
-	}
-	sort(ans.begin(), ans.end());
-	cout << ans[n-1] << endl;
+		cin >> a[i];
+	mergeSort(a);
+	cout << "result:";
+	for(int i = 0; i < n; i++)
+		cout << " " << a[i];
+
 	system("pause");
 	return 0;
 }
