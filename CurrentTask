@@ -11,6 +11,7 @@ void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
 	int pos1 = l;
 	int pos2 = m + 1;
 	int posBuff = l;
+	cout << "merging segments [" << pos1 + 1 << ", " << m + 1 << "] and [" << pos2 + 1 << ", " << r + 1 << "]" << endl;
 	while(pos1 <= m && pos2 <= r){
 		cout << "comparing " << v[pos1] <<" and " << v[pos2] << endl;
 		if(v[pos1]<=v[pos2]) tmp[posBuff++] = v[pos1++];
@@ -20,20 +21,22 @@ void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
 		tmp[posBuff++] = v[pos2++];
 	while(pos1 <= m)
 		tmp[posBuff++] = v[pos1++];
+	cout << "segments [" << l + 1 << ", " << m + 1 << "] and [" <<  m + 2 << ", " << r + 1 << "] merged" << endl;
 	for (int i = l; i < r + 1; i++)
 		v[i] = tmp[i];
+	cout << "segments [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
 }
 void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
 	if (l == r) return;
 	else if(l + 1 == r){
-		cout << "sorting segment [" << l + 1 << ", " << r + 1 <<"]" << endl;
+		cout << "sorting segments [" << l + 1 << ", " << r + 1 <<"]" << endl;
 		cout << "comparing " << v[l] <<" and " << v[r] << endl;
 		if(v[l] > v[r]) swap(v[l], v[r]);
-		cout << "segment [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
+		cout << "segments [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
 		return;
 	}
 	int m = (l + r) / 2;
-	cout << "sorting segment [" << l + 1 << ", " << r + 1 <<"]" << endl;
+	cout << "sorting segments [" << l + 1 << ", " << r + 1 <<"]" << endl;
 	mergeSort(v, l, m, tmp);
 	mergeSort(v, m + 1, r, tmp);
 	mergeFunc(v, l, m, r, tmp);
