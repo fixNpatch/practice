@@ -1,12 +1,7 @@
 #include <vector>
 #include <cstdio>
-#include <ctime>
-#include <cassert>
-#include <algorithm>
 #include <iostream>
 using namespace std;
-
-
 void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
 	int pos1 = l;
 	int pos2 = m + 1;
@@ -24,19 +19,22 @@ void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
 	cout << "segments [" << l + 1 << ", " << m + 1 << "] and [" <<  m + 2 << ", " << r + 1 << "] merged" << endl;
 	for (int i = l; i < r + 1; i++)
 		v[i] = tmp[i];
-	cout << "segments [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
+	cout << "segment [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
 }
 void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
-	if (l == r) return;
+	if (l == r) {
+		cout << "sorting segment [" << l + 1 << ", " << r + 1 <<"]" << endl;
+		return;
+	}
 	else if(l + 1 == r){
-		cout << "sorting segments [" << l + 1 << ", " << r + 1 <<"]" << endl;
+		cout << "sorting segment [" << l + 1 << ", " << r + 1 <<"]" << endl;
 		cout << "comparing " << v[l] <<" and " << v[r] << endl;
 		if(v[l] > v[r]) swap(v[l], v[r]);
-		cout << "segments [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
+		cout << "segment [" << l + 1 << ", " << r + 1 << "] sorted" << endl;
 		return;
 	}
 	int m = (l + r) / 2;
-	cout << "sorting segments [" << l + 1 << ", " << r + 1 <<"]" << endl;
+	cout << "sorting segment [" << l + 1 << ", " << r + 1 <<"]" << endl;
 	mergeSort(v, l, m, tmp);
 	mergeSort(v, m + 1, r, tmp);
 	mergeFunc(v, l, m, r, tmp);
@@ -47,7 +45,6 @@ void mergeSort(vector<int> &v){
 		mergeSort(v, 0, v.size() - 1, tmp);
 	}
 }
-
 int main(){
 	int n;
 	cin >> n;
@@ -55,10 +52,9 @@ int main(){
 	for(int i = 0; i < n; i++)
 		cin >> a[i];
 	mergeSort(a);
-	cout << "result:";
+	printf("result:");
 	for(int i = 0; i < n; i++)
-		cout << " " << a[i];
-
+		printf(" %d", a[i]);
 	system("pause");
 	return 0;
 }
