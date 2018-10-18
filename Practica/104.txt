@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <stack>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int n, m,ii,iii;
+	cin >> n >> m;
+	vector <int> vec(n);
+	for (int i = 0; i < n; i++)
+		vec[i] = i + 1;
+	for (int i = 0; i < m; i++)
+	{
+		cin>> ii >> iii;
+		int maxi = max(vec[ii - 1], vec[iii - 1]);
+		int mini = min(vec[ii - 1], vec[iii - 1]);
+		for (int j = 0; j < n; j++)
+		if (vec[j] == maxi)
+		vec[j] = mini;
+		for (int j = 0; j < n; j++)
+		if (vec[j]>maxi)
+		vec[j]--;
+	}
+	int imax = -INT_MAX - 1;
+	for (int i = 0; i < n; i++)
+		if (vec[i]>imax)
+			imax = vec[i];
+	
+	cout << imax << endl;
+	
+	for (int i = 0; i < vec.size(); i++)
+		cout << vec[i] << " ";
+	return 0;
+}

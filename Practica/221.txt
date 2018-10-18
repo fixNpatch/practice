@@ -1,0 +1,34 @@
+#include <iostream>
+#include <stdio.h>
+#define massiv 100000000/8
+#define OPERATION_INSERT 0
+#define OPERATION_FIND 1
+#define OPERATION_ERASE 2
+
+using namespace std;
+
+int main()
+{
+	unsigned char*m = new unsigned char[massiv];
+	int n,p,x;
+	scanf("%d", &n);
+	for(int i=0; i<n; i++)
+	{
+		scanf("%d %d", &p, &x);
+		if(p==OPERATION_INSERT)
+			m[x/8]|=(1 << x % 8);
+		else if(p==OPERATION_FIND)
+		{
+			if(m[x/8] & (1 << x % 8))
+				printf("TRUE\n");
+			else
+				printf("FALSE\n");
+		}
+		else
+		{
+			if(m[x/8] & (1 << x % 8))
+				m[x/8]^=(1 << x % 8);
+		}
+	}
+	return 0;
+}

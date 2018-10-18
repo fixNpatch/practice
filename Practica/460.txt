@@ -1,0 +1,44 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	int n, m, p;
+	int ans = 0, cnt = 0;
+
+	cin >> n;
+	vector <pair<int,int>> vec(2*n);
+	for (int i = 0; i < 2*n; i++){
+		cin >> vec[i].first;
+		if (i%2 == 0)
+			vec[i].second = 0;
+		else
+			vec[i].second = 2;
+	}
+		
+	cin >> m;
+	vec.resize(2*n+m);
+	for (int i = 2*n; i < 2*n + m; i++){
+		cin >> vec[i].first;
+		vec[i].second = 1;
+	}
+
+	cin >> p;
+	sort(vec.begin(), vec.end());
+
+	for (int i = 0; i < 2*n+m; i++){
+		if (vec[i].second == 0)
+			cnt++;
+		else if (vec[i].second == 2)
+			cnt--;
+		else
+			if (cnt >= p)
+				ans++;
+	}
+
+	cout << ans << endl;
+
+	return 0;
+}

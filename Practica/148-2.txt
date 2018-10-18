@@ -1,0 +1,37 @@
+#pragma warning (disable: 4996)
+#include <stdio.h>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	int n, p;
+	scanf("%d", &n);
+	vector<vector<int>> s(n);
+	for(int i=0; i < n; i++)
+	{
+		int ki;
+		scanf("%d", &ki);
+		for(int j=0; j < ki; j++)
+		{
+			int p;
+			scanf("%d", &p);
+			s[i].push_back(p);
+		}
+	}
+	int k,x1,x2,x3,x4,x5,x6;
+	scanf("%d", &k);
+	for(int i=0; i<k; i++)
+	{
+		scanf("%d %d %d %d %d %d", &x1, &x2, &x3, &x4, &x5, &x6);
+		s[x1-1][x2-1]=(s[x3-1][x4-1]+s[x5-1][x6-1])%1000000;
+	}
+	for(int i=0; i<n; i++)
+	{
+		for(int j=0; j < s[i].size(); j++)
+			printf("%d ", s[i][j]);
+		printf("\n");
+	}
+	return 0;
+}

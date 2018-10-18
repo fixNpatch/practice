@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+#include <iomanip>
+
+using namespace std;
+
+int A = 1009;
+int B = 1013;
+int M = 1046527;
+int X = 0;
+
+void partition_q(int &i, int &j, vector <int> &a)
+{
+    int l1 = i;
+    int r1 = j;
+    X = (A * X + B) % M;
+    int pivot = a[i + X % (j - i + 1)];
+    cout << "partitioning segment ["<< l1 + 1 << ", " <<  r1 + 1 << "] around " << pivot << endl;
+    while (i <= j)
+    {
+        while (a[i] < pivot)
+            i++;
+        while (a[j] > pivot)
+            j--;
+        if (i <= j)
+        {
+            swap(a[i], a[j]);
+            i++;
+            j--;
+        }
+    }
+    cout << "segment ["<< l1 + 1 << ", " <<  r1 + 1 << "] partitioned around " << pivot << endl;
+}
+
+void quickSort3(vector <int> &vec, int l, int r)
+{
+    if (l + 1 == r)
+    {
+        if (vec[l] > vec[r])
+            swap(vec[l], vec[r]);
+    }
+    else
+        if (l < r)
+        {
+            int i = l;
+            int j = r;
+            partition_q(i, j, vec);
+            if (l <= j)
+            {
+                cout << "sorting segment [" << l + 1 << ", " << j + 1 << "]" << endl;
+                quickSort3(vec, l, j);
+                cout << "segment [" << l + 1 << ", " << j + 1 << "] sorted" << endl;
+            }
+            if (i <= r)
+            {
+                cout << "sorting segment [" << i + 1 << ", " << r + 1 << "]" << endl;
+                quickSort3(vec, i, r);
+                cout << "segment [" << i + 1 << ", " << r + 1 << "] sorted" << endl;
+            }
+        }
+}
+
+int main()
+{
+    std::ios::sync_with_stdio(false);
+    int n; cin >> n;
+    vector <int> vec(n);
+    for (int i = 0; i < n; i++)
+        cin >> vec[i];
+    cout << "sorting segment [" << 1 << ", " << n << "]" << endl;
+    quickSort3(vec, 0 , n - 1);
+    cout << "segment [" << 1 << ", " << n << "] sorted" << endl;
+    cout << "result: ";
+    for (int i = 0; i < n; i++)
+        cout << vec[i] << " ";
+    cout << endl;
+    return 0;
+}

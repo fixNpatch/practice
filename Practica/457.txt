@@ -1,0 +1,60 @@
+#include <vector>
+#include <cstdio>
+#include <iostream>
+using namespace std;
+void mergeFunc(vector<int> &v, int l, int m, int r, vector<int> &tmp){
+	int pos1 = l;
+	int pos2 = m + 1;
+	int posBuff = l;
+	printf("merging segments [%d, %d] and [%d, %d]\n", l + 1, m + 1, m + 2, r + 1);
+	while(pos1 <= m && pos2 <= r){
+		printf("comparing %d and %d\n", v[pos1], v[pos2]);
+		if(v[pos1]<=v[pos2]) tmp[posBuff++] = v[pos1++];
+		else tmp[posBuff++] = v[pos2++];
+	}
+	while(pos2 <= r)
+		tmp[posBuff++] = v[pos2++];
+	while(pos1 <= m)
+		tmp[posBuff++] = v[pos1++];
+	printf("segments [%d, %d] and [%d, %d] merged\n", l + 1, m + 1, m + 2, r + 1);
+	for (int i = l; i < r + 1; i++)
+		v[i] = tmp[i];
+}
+void mergeSort(vector<int> &v, int l, int r, vector<int> &tmp){
+	if (l == r) {
+		printf("sorting segment [%d, %d]\n", l + 1, r + 1);
+		printf("segment [%d, %d] sorted\n", l + 1, r + 1);
+		return;
+	}
+	else if(l + 1 == r){
+		printf("sorting segment [%d, %d]\n", l + 1, r + 1);
+		printf("comparing %d and %d\n", v[l], v[r]);
+		if(v[l] > v[r]) swap(v[l], v[r]);
+		printf("segment [%d, %d] sorted\n", l + 1, r + 1);
+		return;
+	}
+	int m = (l + r) / 2;
+	printf("sorting segment [%d, %d]\n", l + 1, r + 1);
+	mergeSort(v, l, m, tmp);
+	mergeSort(v, m + 1, r, tmp);
+	mergeFunc(v, l, m, r, tmp);
+	printf("segment [%d, %d] sorted\n", l + 1, r + 1);
+}
+void mergeSort(vector<int> &v){
+	if(!v.empty()){
+		vector<int> tmp(v.size());
+		mergeSort(v, 0, v.size() - 1, tmp);
+	}
+}
+int main(){
+	int n;
+	cin >> n;
+	vector<int> a(n);
+	for(int i = 0; i < n; i++)
+		cin >> a[i];
+	mergeSort(a);
+	printf("result:");
+	for(int i = 0; i < n; i++)
+		printf(" %d", a[i]);
+	return 0;
+}

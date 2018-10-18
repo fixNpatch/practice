@@ -1,0 +1,52 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int A = 1009, B = 1013, M = 1046527, X = 0;
+
+void partition(vector<int> &v, int &i, int &j){
+	X = (A * X + B) % M;
+	int l = i, r = j, pvt = v[l + X % (r - l + 1)];
+	cout << "partitioning segment [" << l + 1 << ", " << r + 1 << "] around " << pvt << endl; 
+	while(i <= j){
+		while(v[i] < pvt) i++;
+		while(v[j] > pvt) j--;
+		if(i <= j) swap(v[i++],v[j--]);
+	}
+	cout << "segment [" << l + 1 << ", " << r + 1 << "] partitioned around " << pvt << endl;
+}
+void qksort(vector<int> &v, int l, int r){
+	if(l + 1 == r){
+		if(v[l] > v[r]) swap(v[l], v[r]);
+	}
+	else if (l < r){
+		int i = l, j = r;
+		partition(v, i, j);
+		if(l <= j) {
+			cout << "sorting segment [" << l + 1 << ", " << j + 1 << "]" << endl; 
+			qksort(v, l, j);
+			cout << "segment [" << l + 1 << ", " << j + 1 << "] sorted" << endl; 
+		}
+		if(i <= r){
+			cout << "sorting segment [" << i + 1 << ", " << r + 1 << "]" << endl; 
+			qksort(v, i, r);
+			cout << "segment [" << i + 1 << ", " << r + 1 << "] sorted" << endl; 
+		}
+	}
+}
+
+int main(){
+	std::ios::sync_with_stdio(false);
+	int n;
+	cin >> n;
+	vector<int> a(n);
+	for(int i = 0; i < n; i++)
+		cin >> a[i];
+	cout << "sorting segment [" << 1 << ", " << n<< "]" << endl; 
+	qksort(a, 0, a.size() - 1);
+	cout << "segment [" << 1 << ", " << n << "] sorted" << endl; 
+	cout << "result:";
+	for(int i = 0; i < n; i++)
+		cout << " " << a[i];
+	return 0;
+}

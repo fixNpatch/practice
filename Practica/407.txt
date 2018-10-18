@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+const long double MAX_T = 2 * pow((long double)10, 9);
+
+long double check(long double c, long double n){
+	return c * n *  (log(n)/ log ((long double)2));
+}
+
+int main(){
+	std::ios::sync_with_stdio(false);
+	long double c, t;
+	cin >> c >> t;
+	long double l = 0, r = MAX_T;
+	for(int i = 0; i < 100; i++){
+		long double mid = l + (r - l) / 2;
+		if(check(c, mid) < t)
+			l = mid;
+		else r = mid;
+	}
+	cout << fixed << setprecision(9);
+	cout << l;
+	return 0;
+}

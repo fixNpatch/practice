@@ -1,0 +1,46 @@
+#include <vector>
+#include <cstdio>
+using namespace std;
+
+void heapify(vector<int> &v, int pos, int h, int &cnt){
+	int j;
+	while(2*pos+1 < h){
+		j = 2*pos + 1;
+		if((j + 1 < h) && (v[j+1] >= v[j])){
+			j++;
+		}
+		if(v[j] > v[pos]){
+			swap(v[j], v[pos]);
+			pos = j;
+			cnt++;
+		}
+		else break;
+	}
+}
+
+void heapsort(vector<int> &v, int h, int &cnt){
+	for (int i = (h / 2) - 1; i >= 0; i--)
+    {
+        heapify(v, i, h, cnt);
+    }
+	
+    for (int i = h - 1; i > 1; i--)
+	{
+		swap(v[0], v[i]);
+		heapify(v, 0, i, cnt);
+	}
+}
+
+int main(){
+	int n, d, h, cnt = 0;
+	scanf("%d", &n);
+	vector<int> a;
+	for(int i = 0; i < n; i++){
+		scanf("%d", &d);
+		a.push_back(d);
+	}
+	h = a.size();
+	heapsort(a, h, cnt);
+	printf("%d", cnt);
+	return 0;
+}

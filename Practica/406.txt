@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+
+using namespace std;
+
+bool check(long double x, long double s, long double m, long double p){
+	for(int i = 0; i < m; i++)
+		s = s * p - x;
+	return (s > 0);
+}
+
+int main(){
+	std::ios::sync_with_stdio(false);
+	long double s, m, p, x;
+	cin >> s >> m >> p;
+	p = p/100 + 1;
+	long double l = 0, r = s * p;
+	for(int i = 0; i < 100; i++){
+		long double mid = l + (r - l) / 2;
+		if(check(mid, s, m ,p))
+			l = mid;
+		else r = mid;
+	}
+
+	cout << fixed << setprecision(9);
+	cout << l;
+	return 0;
+}

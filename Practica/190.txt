@@ -1,0 +1,34 @@
+#include <iostream>
+#include <map>
+using namespace std;
+int main() {
+    ios_base::sync_with_stdio(false);
+    int cnt = 0;
+    string word;
+    map<string,int> M;
+    pair<string, int> p;
+    pair<int, string> p2;
+    while(cin >> word){
+        auto it = M.find(word);
+        if(it == M.end()){
+            p.first = word;
+            p.second = 1;
+            M.insert(p);
+            cnt++;
+        }
+        else it->second++;
+    }
+    multimap<int, string, greater<int>> M2;
+    for(auto i = M.begin(); i != M.end(); i++){
+        p2.first = i->second;
+        p2.second = i->first;
+        M2.insert(p2);
+    }
+    auto iter2 = M2.begin();
+    int X = min(cnt, 10);
+    for(int i = 0; i < X; i++){
+        cout << iter2->second << " " << iter2->first << endl;
+        iter2++;
+    }
+    return 0;
+}

@@ -1,0 +1,144 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <algorithm>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <ctime>
+#include <cassert>
+
+using namespace std;
+
+#define forn(i, n) for(int i = 0; i < (int)(n); i++)
+#define pb push_back
+#define mp make_pair
+#define all(a) (a).begin(), (a).end()
+#define sz(a) (int)((a).size())
+#define X first
+#define Y second
+#define sqr(x) (x) * (x)
+#define y1 __y1
+#define endl '\n'
+
+typedef long long li;
+typedef long double ld;
+typedef pair<ld, ld> pt;
+
+const int INF = (int)(1e9);
+const li INF64 = (li)(INF) * (li)(INF);
+const ld eps = 1e-12;
+const ld PI = (ld)(3.1415926535897932384626433832795);
+
+const int dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+const int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
+
+bool in(int i, int j, int n, int m)
+{
+    return i >= 0 && i < n && j >= 0 && j < m;
+}
+
+inline int myrand()
+{
+    return rand() ^ (rand() << 15);
+}
+
+const int N = 1e4 + 555;
+
+pt a[N];
+int n;
+ld r;
+
+ld dist(const pt &a, const pt &b)
+{
+	return sqrt(max(sqr(a.X - b.X) + sqr(a.Y - b.Y), ld(0)));
+}
+
+ld get(ld x, ld y)
+{
+	ld res = ld(0);
+
+	forn(i, n)
+		res += dist(mp(x, y), a[i]);
+
+	return res;
+}
+
+vector<pair<ld, pair<ld, ld> > > anss;
+
+int main(){
+#ifdef _DEBUG
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    cout << setprecision(10) << fixed;
+    cerr << setprecision(10) << fixed;
+    
+    srand(int(time(NULL)));
+
+    cin >> n >> r;
+	forn(i, n)
+		cin >> a[i].X >> a[i].Y;
+
+	ld ll, rr, add;
+	ll = -r, rr = - r * 49 / 50;
+	add = r / 50;
+
+	forn(iter, 100)
+	{
+		ld lf = ll, rg = rr;
+		forn(kk, 100)
+		{
+			ld mid1 = lf + (rg - lf) / 3;
+			ld mid2 = rg - (rg - lf) / 3;
+
+			ld y1 = sqrt(max(sqr(r) - sqr(mid1), ld(0)));
+			ld y2 = -y1;
+
+			ld d1 = get(mid1, y1);
+			d1 = min(d1, get(mid1, y2));
+
+			y1 = sqrt(max(sqr(r) - sqr(mid2), ld(0)));
+			y2 = -y1;
+
+			ld d2 = get(mid2, y1);
+			d2 = min(d2, get(mid2, y2));
+
+			if(d1 < d2)
+				rg = mid2;
+			else
+				lf = mid1;
+		}
+
+		ld ansx = (lf + rg) * ld(0.5);
+		ld ansy = ld(INF);
+
+		ld y1 = sqrt(max(sqr(r) - sqr(ansx), ld(0)));
+		ld y2 = -y1;
+
+		ld d1 = get(ansx, y1);
+		ld d2 = get(ansx, y2);
+
+		if(d1 < d2)
+			ansy = y1;
+		else
+			ansy = y2;
+
+		anss.pb(mp(get(ansx, ansy), mp(ansx, ansy)));
+
+		ll += add, rr += add;
+	}
+
+	sort(all(anss));
+
+	cout << anss[0].X << endl;
+	cout << anss[0].Y.X << ' ' << anss[0].Y.Y << endl;
+
+    return 0;
+}

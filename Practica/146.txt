@@ -1,0 +1,42 @@
+#pragma warning (disable: 4996)
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	vector<vector<int>> s;
+	int n,k,t;
+	cin >> n >> k;
+	s.resize(n);
+	for(int i=0;i<k;i++)
+	{
+		char c;
+		cin >> c;
+		if(c=='T')
+		{
+			scanf("OP(%d)", &t);
+			printf("%d ", s[--t].back());
+		}
+		else
+		{
+			cin >> c;
+			if(c=='O')
+			{
+				scanf("P(%d)", &t);
+				printf("%d ", s[--t].back());
+				s[t].pop_back();
+				if(s[t].empty())
+					s[t].shrink_to_fit();
+			}
+			else
+			{	
+				int m;
+				scanf("SH(%d,%d)", &t, &m);
+				s[--t].push_back(m);
+			}
+		}
+	}
+	return 0;
+}

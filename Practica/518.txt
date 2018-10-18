@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+
+double energy[10000];
+
+inline bool upper(const double val, const double sum, const double perc, const int len)
+{
+	double res = 0;
+	for (int i = 0; i < len; i++)
+			res += (abs(energy[i] - val) * perc) / (200 - perc);
+	
+	return sum - val * len >= res;
+}
+
+int main()
+{
+	int n, k;
+	cin >> n >> k;
+	double l = 0;
+	double r = 0;
+	double s = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> energy[i];
+
+		if (r < energy[i])
+			r = energy[i];
+		
+		s += energy[i];
+	}
+
+	r = s + 0.1;
+
+	for (int i = 0; i < 200; i++)
+	{
+		double mid = (r + l) / 2;
+
+		if (upper(mid, s, k, n))
+			l = mid;
+		else
+			r = mid;
+	}
+
+	printf("%.9f\n", r);
+
+	return 0;
+}

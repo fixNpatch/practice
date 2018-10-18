@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+
+int time[100];
+
+bool can_do(const int t, const int len, const int fr_count)
+{
+	int s = 0;
+	int i = 0;
+	int count = 0;
+	while ((count < fr_count) && (i < len))
+	{
+		while ((s + time[i] <= t) && (i < len))
+		{
+			s += time[i];
+			i++;
+		}
+
+		count++;
+		s = 0;
+	}
+
+	return i >= len;
+}
+
+int main()
+{
+	int n, k;
+	cin >> n >> k;
+
+	int min_time = 0;
+	int max_time = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> time[i];
+		max_time += time[i];
+	}
+
+	while (max_time - min_time > 1)
+	{
+		int mid = (min_time + max_time) / 2;
+
+		if (can_do(mid, n, k))
+			max_time = mid;
+		else
+			min_time = mid;
+	}
+
+	if (can_do(min_time, n, k))
+		cout << min_time;
+	else
+		cout << max_time;
+
+	return 0;
+}

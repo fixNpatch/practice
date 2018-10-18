@@ -1,0 +1,54 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<set>
+#include<ctime>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+int main()
+{
+	long n,m,v1,v2;
+	scanf("%ld %ld %ld %ld",&n,&m,&v1,&v2);
+	v1--; v2--;
+	vector<vector<pair<long,long>>> g(n);
+	for(long i=0;i<m;i++)
+	{
+		long x,y,w;
+		scanf("%ld %ld %ld",&x,&y,&w);
+		x--; y--;
+		g[x].push_back(make_pair(y,w));
+		g[y].push_back(make_pair(x,w));
+	}
+	
+	vector<long>d(n,LONG_MAX);
+	d[v1]=0;
+	vector<bool>used(n);
+
+	while(true)
+	{
+		long mi=LONG_MAX,i=-1;
+		for(long j=0;j<n;j++)
+		if(!used[j])
+		if(d[j]<mi){
+		i=j;
+		mi=d[j];
+	}
+	if(i==-1 || mi==LONG_MAX)break;
+		used[i]=true;
+	for(long j=0;j<g[i].size();j++)
+	{
+		long to=g[i][j].first;
+		if(d[to]>d[i]+g[i][j].second)
+		d[to]=d[i]+g[i][j].second;
+	}
+	}
+	if(d[v2]>=LONG_MAX/2)
+	printf("-1");
+	else
+	printf("%ld",d[v2]);
+	return 0;
+}

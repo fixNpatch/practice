@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int n;
+	cin >> n;
+	vector<pair<int, char>> a(n * 2);
+	int ans = 0;
+	for(int i = 0; i < n * 2; i++){
+		cin >> a[i].first;
+		(i%2 == 0) ? a[i].second = 'b' : a[i].second = 'e';  
+	}
+	int lvl = 0, mlvl = 0;
+	sort(a.begin(), a.end());
+	for(int i = 0; i < n * 2; i++){
+		if(a[i].second == 'b') lvl++;
+		else{
+			if(lvl > mlvl){
+				ans = a[i].first - a[i-1].first + 1;
+				mlvl = lvl;
+			}
+			else if (lvl == mlvl) ans += a[i].first - a[i-1].first + 1;
+			lvl--;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

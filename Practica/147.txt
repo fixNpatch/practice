@@ -1,0 +1,47 @@
+#pragma warning (disable: 4996)
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <deque>
+
+using namespace std;
+
+vector<deque<int>> s;
+
+int main()
+{
+	int n, k, i, p;
+	scanf("%d %d", &n, &k);
+	s.resize(n);
+	for(int j=0; j < k; j++)
+	{
+		char c;
+		cin >> c;
+		if(c=='T')
+		{
+			scanf("OP(%d)", &i);
+			printf("%d", s[--i].front());
+			cout << endl;
+		}
+		else
+		{
+			cin >> c;
+			if(c=='U')
+			{
+				scanf("SH(%d,%d)", &i, &p);
+				s[--i].push_back(p);
+			}
+			else
+			{
+				scanf("P(%d)", &i);
+				printf("%d", s[--i].front());
+				s[i].pop_front();
+				cout << endl;
+				if(s[i].empty())
+					s[i].shrink_to_fit();
+			}
+		}
+
+	}
+	return 0;
+}
