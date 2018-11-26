@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <string>
+#include <sstream> 
+
+
+using namespace std;
+
+
+long long extractIntegerWords(string str) { 
+    stringstream ss;
+	string temp;
+	long long found;
+	ss << str;
+    while (!ss.eof()) {
+        ss >> temp;
+        if (stringstream(temp) >> found) 
+            return found;
+    }
+} 
+
+
+void partition(vector<long long> &v, long long pvt, long long &i, long long &j){
+	while(i <= j){
+		while(v[i] < pvt) i++;
+		while(v[j] > pvt) j--;
+		if(i <= j) swap(v[i++],v[j--]);
+	}
+}
+int kth(vector<long long> &v, long long l, long long r, long long k){
+	long long pvt = v[l + (r - l)/2];
+	long long i = l, j = r;
+	partition(v, pvt, i, j);
+	if(k<=j) return kth(v, l, j, k);
+	if(k>=i) return kth(v, i, r, k);
+	return v[k];
+}
+
+
+void add(vector<long long> &v, long long x){
+	v.push_back(x);
+	push_heap(v.begin(), v.end());
+}
+
+void del(int x){
+
+}
+
+long long find(vector<long long> &v, long long x){
+	return kth(v, 0, v.size() - 1, x - 1);
+}
+
+
+int main(){
+	int N;
+	long long x;
+	vector<long long> table;
+	vector<long long> answer;
+	string S;
+	
+	cin >> N;
+
+	for (int i = 0; i < N; i++){
+		cin >> S;
+		x = extractIntegerWords(S);
+		switch(S[0]){
+		case 'A':
+			add(table, x);
+			break;
+		case 'F':
+			answer.push_back(find(table, x));
+			break;
+		case 'D':
+			del(x);
+			break;
+		default:
+			break;
+		}
+	}
+
+
+	return 0;
+}
