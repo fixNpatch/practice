@@ -1,85 +1,110 @@
 #include <iostream>
-#include <vector>
-#include <iomanip>
 #include <algorithm>
+#include <vector>
 #include <string>
-#include <sstream> 
-
+#include <set>
+#include <map>
+#include <cmath>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+#include <iomanip>
 
 using namespace std;
 
+vector<int> d;
 
-long long extractIntegerWords(string str) { 
-    stringstream ss;
-	string temp;
-	long long found;
-	ss << str;
-    while (!ss.eof()) {
-        ss >> temp;
-        if (stringstream(temp) >> found) 
-            return found;
+void heap_add(vector <pair <int, int>> &h, int x, int pos)
+{
+    h.push_back(make_pair(x, pos));
+    d.push_back(h.size() - 1);
+    pos = h.size() - 1;
+    while (pos/2 >= 0 && h[pos/2].first > h[pos].first)
+    {
+        swap(h[(pos)/2], h[pos]);
+        swap(d[h[pos].second], d[h[(pos)/2].second]);
+        pos = (pos)/2;
     }
-} 
-
-
-void partition(vector<long long> &v, long long pvt, long long &i, long long &j){
-	while(i <= j){
-		while(v[i] < pvt) i++;
-		while(v[j] > pvt) j--;
-		if(i <= j) swap(v[i++],v[j--]);
-	}
-}
-int kth(vector<long long> &v, long long l, long long r, long long k){
-	long long pvt = v[l + (r - l)/2];
-	long long i = l, j = r;
-	partition(v, pvt, i, j);
-	if(k<=j) return kth(v, l, j, k);
-	if(k>=i) return kth(v, i, r, k);
-	return v[k];
 }
 
-
-void add(vector<long long> &v, long long x){
-	v.push_back(x);
-	push_heap(v.begin(), v.end());
+void heapify(vector <pair <int, int>> &h, int pos, int x)
+{
+    while(2*pos + 1 < x)
+    {
+        int j = 2*pos + 1;
+        if ((j + 1) < x && h[j+1].first > h[j].first)
+            j++;
+        if (h[pos].first < h[j].first)
+        {
+            swap(h[j],h[pos]);
+            swap(d[h[pos].second], d[h[j].second]);
+            pos = j;
+        }
+        else
+            break;
+    }
 }
 
-void del(int x){
-
-}
-
-long long find(vector<long long> &v, long long x){
-	return kth(v, 0, v.size() - 1, x - 1);
+void HeapRemove(vector <pair <int, int>> &h, int k) {
+    int j = d[k];
+    swap(h[j], h[h.size() - 1]);
+    swap(d[h[j].second], d[h[h.size() - 1].second]);
+    h.pop_back();
+    heapify(h, j, h.size());
 }
 
 
-int main(){
-	int N;
-	long long x;
-	vector<long long> table;
-	vector<long long> answer;
-	string S;
-	
-	cin >> N;
+int find(vector <pair <int, int>> &h, int m)
+{
+    vector<int> temp;
+    int max_temp = min(64, int(h.size()));
+    for (int i = 0; i < max_temp; i++)
+        temp.push_back(h[i].first);
+    nth_element(temp.begin(), temp.begin() + m, temp.end());
+    return temp[m];
+}
 
-	for (int i = 0; i < N; i++){
-		cin >> S;
-		x = extractIntegerWords(S);
-		switch(S[0]){
-		case 'A':
-			add(table, x);
-			break;
-		case 'F':
-			answer.push_back(find(table, x));
-			break;
-		case 'D':
-			del(x);
-			break;
-		default:
-			break;
-		}
-	}
-
-
-	return 0;
+int main()
+{
+   ios_base::sync_with_stdio(false);
+   int n,x,m,k;
+   char c;
+   cin >> n;
+   vector <pair <int, int>> vec;
+   int counter = 0;
+   for (int i = 0; i < n; i++)
+   {
+       cin >> c;
+       if (c == 'A')
+       {
+           for (int i = 0; i < 3; i++)
+               cin >> c;
+           cin >> x;
+           heap_add(vec, x, counter);
+           counter++;
+           cin >> c;
+           continue;
+       }
+       if (c == 'F')
+       {
+           for (int i = 0; i < 4; i++)
+               cin >> c;
+           cin >> m;
+           m--;
+           cout << find(vec, m) << endl;
+           cin >> c;
+           continue;
+       }
+       if (c == 'D')
+       {
+           for (int i = 0; i < 3; i++)
+               cin >> c;
+           cin >> k;
+           k--;
+           HeapRemove(vec, k);
+           cin >> c;
+           continue;
+       }
+   }
+   return 0;
 }
